@@ -5,14 +5,6 @@ if [[ -o interactive ]]; then
   bindkey "^[[1;9C" forward-word
 fi
 
-if [[ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]]; then
-  function subl() {
-    "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" "$@"
-  }
-fi
-
-alias zxc='subl ~/.zshrc'
-alias zxcv='source ~/.zshrc'
 alias chrome_no_cors='open -na "Google Chrome" --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security'
 
 # Load a project-local .zsh_config on directory change, once per directory.

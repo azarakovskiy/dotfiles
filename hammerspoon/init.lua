@@ -13,15 +13,6 @@ Install:andUse("Caffeine", {
     }
 })
 
-Install:andUse("MouseCircle", {
-    config = {
-        color = hs.drawing.color.x11.darkred
-    },
-    hotkeys = {
-        show = { minorMash, "m" }
-    }
-})
-
 hs.loadSpoon("ShiftIt")
 spoon.ShiftIt:bindHotkeys({});
 

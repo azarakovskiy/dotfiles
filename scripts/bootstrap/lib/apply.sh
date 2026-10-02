@@ -56,45 +56,6 @@ bootstrap_configure_zsh_source() {
   bootstrap_append_line_once "$source_line" "$zshrc"
 }
 
-bootstrap_create_symlink() {
-  local source_path="$1"
-  local target_path="$2"
-
-  if [[ ! -e "$source_path" ]]; then
-    bootstrap_warn "Source not found: $source_path — skipping"
-    return 0
-  fi
-
-  if [[ -L "$target_path" ]]; then
-    if [[ "$(readlink "$target_path")" == "$source_path" ]]; then
-      bootstrap_log "Symlink already configured: $target_path"
-      return 0
-    fi
-    bootstrap_warn "$target_path points elsewhere — skipping overwrite"
-    return 0
-  fi
-
-  if [[ -e "$target_path" ]]; then
-    bootstrap_warn "$target_path exists and is not a symlink — skipping overwrite"
-    return 0
-  fi
-
-  bootstrap_run_cmd ln -s "$source_path" "$target_path"
-}
-
-bootstrap_configure_claude_links() {
-  local claude_dir="$HOME/.claude"
-  local ai_dir="$BOOTSTRAP_REPO_ROOT/ai"
-
-  bootstrap_log "Configuring Claude Code links"
-  bootstrap_run_cmd mkdir -p "$claude_dir"
-
-  bootstrap_create_symlink "$ai_dir/AGENTS.md" "$claude_dir/CLAUDE.md"
-  bootstrap_create_symlink "$ai_dir/agents"    "$claude_dir/agents"
-  bootstrap_create_symlink "$ai_dir/skills"    "$claude_dir/commands"
-  bootstrap_create_symlink "$ai_dir/voice.md"  "$claude_dir/voice.md"
-}
-
 bootstrap_configure_hammerspoon_link() {
   local source_path target_path
 
@@ -124,19 +85,6 @@ bootstrap_configure_hammerspoon_link() {
   bootstrap_run_cmd ln -s "$source_path" "$target_path"
 }
 
-bootstrap_configure_layout() {
-  bootstrap_run_cmd mkdir -p "$HOME/dev/azarakovskiy"
-}
-
-bootstrap_print_manual_steps() {
-  cat <<'MANUAL'
-[bootstrap] Manual follow-up steps (intentionally not automated):
-- Add SSH private key to ~/.ssh (if needed) and run ssh-add --apple-use-keychain ~/.ssh/id_ed25519
-- Import GPG keys
-- Copy and customize git/.gitconfig, git/.gitignore, git/.gitmessage if not already configured
-MANUAL
-}
-
 bootstrap_run_apply() {
   bootstrap_log "Applying bootstrap"
 
@@ -145,8 +93,4 @@ bootstrap_run_apply() {
   bootstrap_install_brew_bundle
   bootstrap_configure_zsh_source
   bootstrap_configure_hammerspoon_link
-  bootstrap_configure_claude_links
-  bootstrap_configure_layout
-  bootstrap_apply_macos_settings
-  bootstrap_print_manual_steps
 }

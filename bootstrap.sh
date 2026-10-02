@@ -14,7 +14,6 @@ PRECHECK_ONLY=0
 
 source "$LIB_DIR/common.sh"
 source "$LIB_DIR/precheck.sh"
-source "$LIB_DIR/macos.sh"
 source "$LIB_DIR/apply.sh"
 source "$LIB_DIR/verify.sh"
 
@@ -29,9 +28,6 @@ Options:
   --precheck-only               Run only pre-checks
   --dry-run                     Print planned commands without changing files
   -h, --help                    Show help
-
-Environment:
-  BOOTSTRAP_SKIP_MACOS_SETTINGS=1  Skip one-time macOS defaults
 
 Default behavior: --apply --verify
 HELP

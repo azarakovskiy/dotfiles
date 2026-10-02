@@ -16,7 +16,7 @@ Instruction priority is:
 4. This `AGENTS.md`
 5. Generic or personal guidance files
 
-Repo-local rules in this file override generic AI guidance. This is consistent with `ai/bootstrap.md`.
+Repo-local rules in this file override generic AI guidance.
 
 ## Scope
 This file applies to the entire repository unless a deeper `AGENTS.md` is added in a subdirectory.
@@ -32,7 +32,7 @@ If a deeper `AGENTS.md` exists later, that file refines or overrides rules only 
 - Keep machine portability in mind (`/opt/homebrew` and `/usr/local` differences).
 
 ## Bootstrap and Install Rules
-- Prefer deterministic installs from a single source of truth (for example `Brewfile`).
+- Install packages from `Brewfile`. Apply macOS mouse and font settings from `cli/macos.zsh` when the shell starts.
 - Separate unattended setup from manual secret or identity steps.
 - Never commit secrets, private keys, tokens, or machine-identity-sensitive data.
 - Assume this repo is public-safe: only non-sensitive assets belong here.
@@ -50,9 +50,8 @@ Any change to install/bootstrap/sourcing behavior must update `README.md` in the
 Run these checks when changing relevant files:
 
 ```sh
-zsh -n all.zsh cli/*.zsh git/*.zsh kube/*.zsh
-bash -n install.sh
-# or sh -n install.sh if script is kept POSIX-only
+zsh -n all.zsh cli/*.zsh
+bash -n bootstrap.sh scripts/bootstrap/lib/*.sh
 ```
 
 Also smoke-check key aliases and functions after sourcing.

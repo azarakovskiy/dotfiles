@@ -1,96 +1,78 @@
 # Development Tools
 
-Personal macOS bootstrap + Zsh toolset for quickly setting up a new development machine.
+macOS bootstrap and Zsh config for a new machine. Apple Silicon first. Both Homebrew prefixes are supported: `/opt/homebrew` and `/usr/local`.
 
-## Goals
-- Set up a new laptop fast.
-- Automate most setup steps.
-- Keep non-sensitive configs and misc transferable files in one place.
+## Repo root
 
-## Quick Start
+- `Brewfile` — Homebrew formulae and casks
+- `bootstrap.sh` — setup runner
+- `all.zsh` — shell entry point
+- `cli/` — shell helpers
+- `git/.gitconfig` — identity template with `???` placeholders; bootstrap does not apply it
+- `git/.gitignore` — excludes template, including `.zsh_config`
+- `hammerspoon/` — config symlinked to `~/.hammerspoon`
+
+## Quick start
+
 1. Clone this repo to a stable path (example: `~/.dotfiles`).
-2. Run a dry run first:
+2. Preview:
 
 ```sh
 cd ~/.dotfiles
 ./bootstrap.sh --dry-run
 ```
 
-3. Run setup + verification:
+3. Install and verify:
 
 ```sh
-./bootstrap.sh --apply --verify
+./bootstrap.sh
 ```
 
-4. Open a new shell, or run:
+4. Open a new shell.
 
-```sh
-source ~/.zshrc
-```
+## Bootstrap
 
-## Bootstrap Commands
-- `./bootstrap.sh --apply --verify`  
-  Install/configure and verify.
-- `./bootstrap.sh --verify-only`  
-  Verification only.
-- `./bootstrap.sh --precheck-only`  
-  Environment checks only.
-- `./bootstrap.sh --dry-run`  
-  Show planned changes without mutating files.
+Default is apply, then verify.
 
-## What Gets Automated
-- Homebrew install (if missing).
-- Package install from `Brewfile` via `brew bundle`.
-- `brew shellenv` line in `~/.zprofile` (idempotent).
-- `source "<repo>/all.zsh"` line in `~/.zshrc` (idempotent).
-- `~/.hammerspoon` symlink to repo `hammerspoon/` (safe, no overwrite of existing non-symlink directory).
-- One-time macOS defaults:
-  - mouse scaling (`com.apple.mouse.scaling = 9.0`)
-  - font smoothing (`AppleFontSmoothing = 0`)
+- `./bootstrap.sh` — install and verify
+- `./bootstrap.sh --dry-run` — print planned commands
+- `./bootstrap.sh --precheck-only` — macOS check, Command Line Tools warning, network
+- `./bootstrap.sh --verify-only` — verification only
 
-## Manual Steps (Intentional)
-- Add/import SSH keys.
-- Import GPG keys.
-- Review and apply templates:
-  - `git/.gitconfig`
-  - `git/.gitignore`
-  - `git/.gitmessage`
+Apply does this:
 
-## Zsh Modules and Commands
-Load all modules:
+- Installs Homebrew when it is missing
+- Runs `brew bundle` on `Brewfile`
+- Appends `brew shellenv` to `~/.zprofile` once
+- Appends `source "<repo>/all.zsh"` to `~/.zshrc` once
+- Symlinks `~/.hammerspoon` to `hammerspoon/`, and leaves an existing real directory in place
 
-```sh
-source "<repo-path>/all.zsh"
-```
+Precheck requires macOS. When Xcode Command Line Tools are missing it prints `xcode-select --install` and does not install them.
 
-Main command groups:
-- Git: `gbranch`, `gpr`, `gstash`, `grebase`, `gsquash`, `gcommit`, `gloggy`, `gclean`, `cleanup`
-- CLI/Docker: `dockstop`, `dockrmvol`, `grepl`, `sublify`, `genSublime`, `use`, `zxc`, `zxcv`
-- Kubernetes: `k`, `kctx`, `kpods`, `kns`
+`git` and `zsh` stay the copies that come with macOS.
 
-## Repository Layout
-- `all.zsh` - top-level loader
-- `git/` - git helpers and templates
-- `cli/` - shell utility commands
-- `kube/` - kubectl helpers
-- `hammerspoon/` - Hammerspoon config
-- `etc/` - non-sensitive misc files
-- `scripts/bootstrap/lib/` - modular bootstrap internals (`common`, `precheck`, `apply`, `macos`, `verify`)
+Homebrew installs the `nvm` and `rustup` formulae. Node 24 and the stable Rust toolchain are installed by the shell modules below.
 
-## Runtime Side Effects Policy
-Sourcing Zsh files should only define commands/aliases/hooks.  
-One-time machine settings are handled by bootstrap, not by shell startup.
+Docker Desktop's Kubernetes client is `kubectl.docker`. `kubectl` is the Homebrew formula.
 
-## Legacy Tap-Based Usage
-Using Homebrew tap paths directly is still possible, but considered legacy and less portable than cloning to a stable path (for example `~/.dotfiles`).
+## Shell
 
-## Future Plans
-- Improve bootstrap verification with explicit PASS/FAIL summary and exit codes.
-- Add optional profile flags (`--minimal`, `--full`) to control install footprint.
-- Add optional secret bootstrap integration (for example 1Password/Bitwarden CLI), without storing secrets in repo.
-- Add automated smoke tests for critical aliases/functions.
-- Replace brittle legacy helpers with smaller tested scripts where shell complexity is high.
-- Add CI checks for shell syntax + README/bootstrap contract drift.
+`all.zsh` sources `cli/all.zsh`:
 
-## Contributor Note
-This repo uses `AGENTS.md` as the local working agreement for change safety and consistency.
+- `cli/cli.zsh` — Option-arrow word movement, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
+- `cli/docker.zsh` — `dockstop`
+- `cli/macos.zsh` — mouse scaling and font smoothing, rewritten when the values differ
+- `cli/nvm.zsh` — Homebrew nvm and Node 24
+- `cli/rust.zsh` — Homebrew rustup, Cargo, and the stable toolchain
+
+## Hammerspoon
+
+Caffeine on `ctrl-alt-shift-c`, ShiftIt with its default binds, and a Bluetooth toggle that turns the radio off on sleep and on at wake. `blueutil` is taken from `/opt/homebrew` or `/usr/local`, whichever is present. Vendored spoons: Caffeine, ShiftIt, SpoonInstall.
+
+## Layout
+
+- `scripts/bootstrap/lib/` — `common`, `precheck`, `apply`, `verify`
+
+## Contributor note
+
+`AGENTS.md` is the working agreement for changes in this repo.

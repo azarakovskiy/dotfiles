@@ -1,3 +1,6 @@
 .zsh_config
 *.iml
 *.ipr
+
+# Agentic config
+.ua/ # https://github.com/Egonex-AI/Understand-Anything

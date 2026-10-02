@@ -23,6 +23,72 @@ bootstrap_verify_command() {
   fi
 }
 
+bootstrap_verify_nvm() {
+  local prefix
+
+  for prefix in /opt/homebrew /usr/local; do
+    if [[ -s "$prefix/opt/nvm/nvm.sh" ]]; then
+      printf 'PASS  nvm script found at %s/opt/nvm/nvm.sh\n' "$prefix"
+      return 0
+    fi
+  done
+
+  printf 'WARN  nvm script missing\n'
+}
+
+bootstrap_verify_formula() {
+  local formula="$1"
+
+  # Formula name and command differ for these two. nvm is a script, not a binary.
+  case "$formula" in
+    awscli) bootstrap_verify_command aws ;;
+    gnupg) bootstrap_verify_command gpg ;;
+    nvm) bootstrap_verify_nvm ;;
+    *) bootstrap_verify_command "$formula" ;;
+  esac
+}
+
+bootstrap_verify_cask() {
+  local brew_bin="$1"
+  local cask="$2"
+
+  if [[ -z "$brew_bin" ]]; then
+    printf 'WARN  cask missing: %s\n' "$cask"
+    return 0
+  fi
+
+  if "$brew_bin" list --cask "$cask" >/dev/null 2>&1; then
+    printf 'PASS  cask installed: %s\n' "$cask"
+  else
+    printf 'WARN  cask missing: %s\n' "$cask"
+  fi
+}
+
+bootstrap_verify_brewfile() {
+  local brew_bin="$1"
+  local line name
+
+  if [[ ! -f "$BOOTSTRAP_REPO_ROOT/Brewfile" ]]; then
+    printf 'WARN  Brewfile missing at %s/Brewfile\n' "$BOOTSTRAP_REPO_ROOT"
+    return 0
+  fi
+
+  while IFS= read -r line || [[ -n "${line:-}" ]]; do
+    case "$line" in
+      'brew "'*'"'*)
+        name="${line#brew \"}"
+        name="${name%%\"*}"
+        bootstrap_verify_formula "$name"
+        ;;
+      'cask "'*'"'*)
+        name="${line#cask \"}"
+        name="${name%%\"*}"
+        bootstrap_verify_cask "$brew_bin" "$name"
+        ;;
+    esac
+  done < "$BOOTSTRAP_REPO_ROOT/Brewfile"
+}
+
 bootstrap_run_verify() {
   local brew_bin source_line
 
@@ -38,9 +104,8 @@ bootstrap_run_verify() {
   printf -v source_line 'source "%s/all.zsh"' "$BOOTSTRAP_REPO_ROOT"
   bootstrap_verify_line_present "$source_line" "$HOME/.zshrc"
 
+  # git and zsh come from macOS. They are not Brewfile entries.
   bootstrap_verify_command git
   bootstrap_verify_command zsh
-  bootstrap_verify_command gpg
-  bootstrap_verify_command blueutil
-  bootstrap_verify_command kubectl
+  bootstrap_verify_brewfile "$brew_bin"
 }

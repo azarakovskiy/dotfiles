@@ -1,15 +1,20 @@
-# Core CLI tools
-brew "git"
-brew "gnupg"
-brew "wget"
-brew "zsh"
-
-# Tools used by existing shell helpers
+# Formulae
+brew "awscli"
 brew "blueutil"
+brew "gh"
+brew "gnupg"
+brew "go"
+brew "herdr"
 brew "kubectl"
+brew "nvm"
+brew "pipx"
+brew "rustup"
 
-# GUI apps
+# Casks
 cask "bitwarden"
+cask "docker-desktop"
+cask "ghostty"
+cask "google-chrome"
 cask "hammerspoon"
-cask "iterm2"
-cask "sublime-text"
+cask "marta"
+cask "zed"
