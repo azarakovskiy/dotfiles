@@ -1,6 +1,7 @@
 # shellcheck shell=zsh
 
-# Keg-only Homebrew rustup and Cargo. The stable toolchain is not a Brewfile entry.
+# rustup and Cargo. The stable toolchain is not a Brewfile entry.
+# Prefer the Homebrew formula. Use rustup in ~/.cargo/bin when that formula is absent.
 
 __devtools_rustup_bin=""
 for __devtools_prefix in /opt/homebrew /usr/local; do
@@ -10,8 +11,12 @@ for __devtools_prefix in /opt/homebrew /usr/local; do
   fi
 done
 
+if [[ -z "$__devtools_rustup_bin" && -x "$HOME/.cargo/bin/rustup" ]]; then
+  __devtools_rustup_bin="$HOME/.cargo/bin"
+fi
+
 if [[ -z "$__devtools_rustup_bin" ]]; then
-  echo "[devtools][warn] Homebrew rustup not found under /opt/homebrew or /usr/local" >&2
+  echo "[devtools][warn] rustup not found under Homebrew or $HOME/.cargo/bin" >&2
 else
   typeset -U path
   path=("$__devtools_rustup_bin" "$HOME/.cargo/bin" $path)

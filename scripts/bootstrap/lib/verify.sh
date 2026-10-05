@@ -23,27 +23,30 @@ bootstrap_verify_command() {
   fi
 }
 
-bootstrap_verify_nvm() {
+bootstrap_verify_script() {
+  local label="$1"
+  local relative_path="$2"
   local prefix
 
   for prefix in /opt/homebrew /usr/local; do
-    if [[ -s "$prefix/opt/nvm/nvm.sh" ]]; then
-      printf 'PASS  nvm script found at %s/opt/nvm/nvm.sh\n' "$prefix"
+    if [[ -s "$prefix/$relative_path" ]]; then
+      printf 'PASS  %s script found at %s/%s\n' "$label" "$prefix" "$relative_path"
       return 0
     fi
   done
 
-  printf 'WARN  nvm script missing\n'
+  printf 'WARN  %s script missing\n' "$label"
 }
 
 bootstrap_verify_formula() {
   local formula="$1"
 
-  # Formula name and command differ for these two. nvm is a script, not a binary.
+  # Formula name and command differ for these. nvm and antidote are scripts, not binaries.
   case "$formula" in
     awscli) bootstrap_verify_command aws ;;
     gnupg) bootstrap_verify_command gpg ;;
-    nvm) bootstrap_verify_nvm ;;
+    nvm) bootstrap_verify_script nvm opt/nvm/nvm.sh ;;
+    antidote) bootstrap_verify_script antidote opt/antidote/share/antidote/antidote.zsh ;;
     *) bootstrap_verify_command "$formula" ;;
   esac
 }

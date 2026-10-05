@@ -1,6 +1,7 @@
 # shellcheck shell=zsh
 
-# Homebrew nvm and Node 24. Node itself is not a Brewfile entry.
+# nvm and Node 24. Node itself is not a Brewfile entry.
+# Prefer the Homebrew formula. Use an existing ~/.nvm install when that formula is absent.
 
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
@@ -16,8 +17,12 @@ for __devtools_prefix in /opt/homebrew /usr/local; do
   fi
 done
 
+if [[ -z "$__devtools_nvm_sh" && -s "$NVM_DIR/nvm.sh" ]]; then
+  __devtools_nvm_sh="$NVM_DIR/nvm.sh"
+fi
+
 if [[ -z "$__devtools_nvm_sh" ]]; then
-  echo "[devtools][warn] Homebrew nvm not found under /opt/homebrew or /usr/local" >&2
+  echo "[devtools][warn] nvm not found under Homebrew or $NVM_DIR" >&2
 else
   # shellcheck disable=SC1090
   source "$__devtools_nvm_sh"

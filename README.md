@@ -7,6 +7,7 @@ macOS bootstrap and Zsh config for a new machine. Apple Silicon first. Both Home
 - `Brewfile` — Homebrew formulae and casks
 - `bootstrap.sh` — setup runner
 - `all.zsh` — shell entry point
+- `zsh_plugins.txt` — Antidote plugin list
 - `cli/` — shell helpers
 - `git/.gitconfig` — identity template with `???` placeholders; bootstrap does not apply it
 - `git/.gitignore` — excludes template, including `.zsh_config`
@@ -62,8 +63,28 @@ Docker Desktop's Kubernetes client is `kubectl.docker`. `kubectl` is the Homebre
 - `cli/cli.zsh` — Option-arrow word movement, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
 - `cli/docker.zsh` — `dockstop`
 - `cli/macos.zsh` — mouse scaling and font smoothing, rewritten when the values differ
-- `cli/nvm.zsh` — Homebrew nvm and Node 24
-- `cli/rust.zsh` — Homebrew rustup, Cargo, and the stable toolchain
+- `cli/nvm.zsh` — nvm and Node 24. Uses the Homebrew formula, or `~/.nvm/nvm.sh` when Homebrew nvm is absent.
+- `cli/rust.zsh` — rustup, Cargo, and the stable toolchain. Uses the Homebrew formula, or `~/.cargo/bin/rustup` when Homebrew rustup is absent.
+- `cli/antidote.zsh` — Antidote, loaded from `zsh_plugins.txt`
+
+## Plugins
+
+Edit `zsh_plugins.txt`. Put one plugin on each line. Save the file, then open a new shell. Antidote clones a new plugin at that start. The shell runs `compinit` before the list so Oh My Zsh plugins can register completions.
+
+```
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting
+```
+
+Put `zsh-users/zsh-syntax-highlighting` on the last line.
+
+Run `antidote update` to update cloned plugins. Run `antidote install owner/repo` to append one plugin and clone it.
+
+An Oh My Zsh plugin uses this form:
+
+```
+ohmyzsh/ohmyzsh path:plugins/git
+```
 
 ## Hammerspoon
 

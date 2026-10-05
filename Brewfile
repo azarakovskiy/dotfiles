@@ -1,4 +1,5 @@
 # Formulae
+brew "antidote"
 brew "awscli"
 brew "blueutil"
 brew "gh"
