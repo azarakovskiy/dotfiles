@@ -93,4 +93,6 @@ bootstrap_run_apply() {
   bootstrap_install_brew_bundle
   bootstrap_configure_zsh_source
   bootstrap_configure_hammerspoon_link
+
+  bootstrap_log "Git name, email, and commit signing are manual: ./scripts/gpg-signing.sh"
 }

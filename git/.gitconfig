@@ -1,7 +1,7 @@
 [user]
 	name = ???
 	email = ???
-	; https://help.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key
+	; scripts/gpg-signing.sh — do not commit a real signing key
 	signingkey = ???
 [core]
 	excludesfile = ~/.gitignore

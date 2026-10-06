@@ -107,6 +107,12 @@ bootstrap_run_verify() {
   printf -v source_line 'source "%s/all.zsh"' "$BOOTSTRAP_REPO_ROOT"
   bootstrap_verify_line_present "$source_line" "$HOME/.zshrc"
 
+  if [[ -z "$(git config --global --get user.signingkey || true)" ]]; then
+    printf 'WARN  git user.signingkey is unset. Run ./scripts/gpg-signing.sh\n'
+  else
+    printf 'PASS  git user.signingkey is set\n'
+  fi
+
   # git and zsh come from macOS. They are not Brewfile entries.
   bootstrap_verify_command git
   bootstrap_verify_command zsh

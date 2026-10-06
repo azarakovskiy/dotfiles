@@ -47,6 +47,7 @@ Apply does this:
 - Appends `brew shellenv` to `~/.zprofile` once
 - Appends `source "<repo>/all.zsh"` to `~/.zshrc` once
 - Symlinks `~/.hammerspoon` to `hammerspoon/`, and leaves an existing real directory in place
+- Prints a reminder to run `./scripts/gpg-signing.sh` for Git name, email, and commit signing
 
 Precheck requires macOS. When Xcode Command Line Tools are missing it prints `xcode-select --install` and does not install them.
 
@@ -56,12 +57,27 @@ Homebrew installs the `nvm` and `rustup` formulae. Node 24 and the stable Rust t
 
 Docker Desktop's Kubernetes client is `kubectl.docker`. `kubectl` is the Homebrew formula.
 
+## Git commit signing
+
+Bootstrap does not set your Git name, email, or signing key. `git/.gitconfig` stays a template. Real values stay in your global Git config and in `~/.gnupg`.
+
+The Brewfile installs `gnupg` and `pinentry-mac`. New shells export `GPG_TTY` from `cli/gpg.zsh`.
+
+After bootstrap, run:
+
+```sh
+./scripts/gpg-signing.sh
+```
+
+The script follows [GitHub's GPG signing steps](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key). It writes your global Git config and `~/.gnupg`. It does not write your name, email, or key into this repo.
+
 ## Shell
 
 `all.zsh` sources `cli/all.zsh`:
 
 - `cli/cli.zsh` — Option-arrow word movement, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
 - `cli/docker.zsh` — `dockstop`
+- `cli/gpg.zsh` — `GPG_TTY` for commit signing
 - `cli/macos.zsh` — mouse scaling and font smoothing, rewritten when the values differ
 - `cli/nvm.zsh` — nvm and Node 24. Uses the Homebrew formula, or `~/.nvm/nvm.sh` when Homebrew nvm is absent.
 - `cli/rust.zsh` — rustup, Cargo, and the stable toolchain. Uses the Homebrew formula, or `~/.cargo/bin/rustup` when Homebrew rustup is absent.

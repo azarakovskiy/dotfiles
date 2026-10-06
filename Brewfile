@@ -8,6 +8,7 @@ brew "go"
 brew "herdr"
 brew "kubectl"
 brew "nvm"
+brew "pinentry-mac"
 brew "pipx"
 brew "rustup"
 

@@ -17,5 +17,5 @@ Syntax-check the shell files you change:
 
 ```sh
 zsh -n all.zsh cli/*.zsh
-bash -n bootstrap.sh scripts/bootstrap/lib/*.sh
+bash -n bootstrap.sh scripts/bootstrap/lib/*.sh scripts/gpg-signing.sh
 ```
