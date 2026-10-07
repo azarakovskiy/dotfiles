@@ -56,20 +56,19 @@ bootstrap_configure_zsh_source() {
   bootstrap_append_line_once "$source_line" "$zshrc"
 }
 
-bootstrap_configure_hammerspoon_link() {
-  local source_path target_path
+bootstrap_link_when_missing() {
+  local source_path="$1"
+  local target_path="$2"
+  local label="$3"
 
-  source_path="$BOOTSTRAP_REPO_ROOT/hammerspoon"
-  target_path="$HOME/.hammerspoon"
-
-  if [[ ! -d "$source_path" ]]; then
-    bootstrap_warn "hammerspoon directory not found at $source_path"
+  if [[ ! -e "$source_path" ]]; then
+    bootstrap_warn "$label not found at $source_path"
     return 0
   fi
 
   if [[ -L "$target_path" ]]; then
     if [[ "$(readlink "$target_path")" == "$source_path" ]]; then
-      bootstrap_log "Hammerspoon symlink already configured"
+      bootstrap_log "$label symlink already configured"
       return 0
     fi
 
@@ -82,7 +81,23 @@ bootstrap_configure_hammerspoon_link() {
     return 0
   fi
 
+  bootstrap_run_cmd mkdir -p "$(dirname "$target_path")"
   bootstrap_run_cmd ln -s "$source_path" "$target_path"
+}
+
+bootstrap_configure_config_links() {
+  bootstrap_link_when_missing \
+    "$BOOTSTRAP_REPO_ROOT/hammerspoon" \
+    "$HOME/.hammerspoon" \
+    "Hammerspoon"
+  bootstrap_link_when_missing \
+    "$BOOTSTRAP_REPO_ROOT/ghostty/config.ghostty" \
+    "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" \
+    "Ghostty"
+  bootstrap_link_when_missing \
+    "$BOOTSTRAP_REPO_ROOT/herdr/config.toml" \
+    "$HOME/.config/herdr/config.toml" \
+    "Herdr"
 }
 
 bootstrap_run_apply() {
@@ -92,7 +107,7 @@ bootstrap_run_apply() {
   bootstrap_configure_shellenv
   bootstrap_install_brew_bundle
   bootstrap_configure_zsh_source
-  bootstrap_configure_hammerspoon_link
+  bootstrap_configure_config_links
 
   bootstrap_log "Git name, email, and commit signing are manual: ./scripts/gpg-signing.sh"
 }

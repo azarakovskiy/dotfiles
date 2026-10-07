@@ -12,6 +12,8 @@ macOS bootstrap and Zsh config for a new machine. Apple Silicon first. Both Home
 - `git/.gitconfig` — identity template with `???` placeholders; bootstrap does not apply it
 - `git/.gitignore` — excludes template, including `.zsh_config`
 - `hammerspoon/` — config symlinked to `~/.hammerspoon`
+- `ghostty/config.ghostty` — Ghostty config, symlinked to `~/Library/Application Support/com.mitchellh.ghostty/config.ghostty`
+- `herdr/config.toml` — Herdr config, symlinked to `~/.config/herdr/config.toml`
 
 ## Quick start
 
@@ -46,7 +48,7 @@ Apply does this:
 - Runs `brew bundle` on `Brewfile`
 - Appends `brew shellenv` to `~/.zprofile` once
 - Appends `source "<repo>/all.zsh"` to `~/.zshrc` once
-- Symlinks `~/.hammerspoon` to `hammerspoon/`, and leaves an existing real directory in place
+- Symlinks Hammerspoon, Ghostty, and Herdr config paths to this repo, and leaves an existing real file or directory in place
 - Prints a reminder to run `./scripts/gpg-signing.sh` for Git name, email, and commit signing
 
 Precheck requires macOS. When Xcode Command Line Tools are missing it prints `xcode-select --install` and does not install them.
@@ -75,7 +77,7 @@ The script follows [GitHub's GPG signing steps](https://docs.github.com/en/authe
 
 `all.zsh` sources `cli/all.zsh`:
 
-- `cli/cli.zsh` — Option-arrow word movement, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
+- `cli/cli.zsh` — Option-arrow jumps by alphanumeric word, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
 - `cli/docker.zsh` — `dockstop`
 - `cli/gpg.zsh` — `GPG_TTY` for commit signing
 - `cli/macos.zsh` — mouse scaling and font smoothing, rewritten when the values differ

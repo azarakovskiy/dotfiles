@@ -1,0 +1,44 @@
+onboarding = false
+
+[ui]
+status_indicators = "symbols"
+
+[theme]
+name = "gruvbox"
+auto_switch = false
+
+[ui.toast]
+delivery = "off"
+
+[keys]
+new_tab = "cmd+t"
+close_pane = "cmd+w"
+split_vertical = "cmd+d"
+split_horizontal = "cmd+shift+d"
+cycle_pane_next = "cmd+]"
+cycle_pane_previous = "cmd+["
+next_tab = "cmd+shift+]"
+previous_tab = "cmd+shift+["
+switch_workspace = "cmd+1..9"
+switch_tab = "alt+1..9"
+
+[[keys.command]]
+key = "cmd+p"
+type = "shell"
+command = "\"$HERDR_BIN_PATH\" plugin pane open --plugin cesarferreira.herdr-palette --entrypoint picker"
+description = "Open Herdr Palette"
+
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "herdr-file-viewer.open-file-viewer"
+description = "open file viewer in split"
+
+[[keys.command]]
+key = "prefix+shift+f"
+type = "plugin_action"
+command = "herdr-file-viewer.open-file-viewer-tab"
+description = "open file viewer in tab"
+
+[experimental]
+kitty_graphics = true

@@ -1,6 +1,9 @@
 # shellcheck shell=zsh
 
 if [[ -o interactive ]]; then
+  # Slash and other punctuation are word boundaries. Default WORDCHARS includes "/".
+  autoload -Uz select-word-style
+  select-word-style bash
   bindkey "^[[1;9D" backward-word
   bindkey "^[[1;9C" forward-word
 fi
