@@ -1,0 +1,14 @@
+services:
+  hindsight:
+    image: ghcr.io/vectorize-io/hindsight:latest
+    container_name: hindsight
+    pull_policy: always
+    restart: unless-stopped
+    shm_size: 1g
+    ports:
+      - "8888:8888"
+      - "9999:9999"
+    environment:
+      HINDSIGHT_API_LLM_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ${HOME}/.hindsight-docker:/home/hindsight/.pg0

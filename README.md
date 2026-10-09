@@ -14,6 +14,8 @@ macOS bootstrap and Zsh config for a new machine. Apple Silicon first. Both Home
 - `hammerspoon/` — config symlinked to `~/.hammerspoon`
 - `ghostty/config.ghostty` — Ghostty config, symlinked to `~/Library/Application Support/com.mitchellh.ghostty/config.ghostty`
 - `herdr/config.toml` — Herdr config, symlinked to `~/.config/herdr/config.toml`
+- `dev/docker-compose.yaml` — Hindsight. `hindsight-up` starts it
+- `dev/hindsight.zsh` — `hindsight-up`
 
 ## Quick start
 
@@ -49,6 +51,7 @@ Apply does this:
 - Appends `brew shellenv` to `~/.zprofile` once
 - Appends `source "<repo>/all.zsh"` to `~/.zshrc` once
 - Symlinks Hammerspoon, Ghostty, and Herdr config paths to this repo, and leaves an existing real file or directory in place
+- Asks how `hindsight-up` should resolve `OPENAI_API_KEY`, then writes that answer once to `~/.config/devtools/hindsight-openai`
 - Prints a reminder to run `./scripts/gpg-signing.sh` for Git name, email, and commit signing
 
 Precheck requires macOS. When Xcode Command Line Tools are missing it prints `xcode-select --install` and does not install them.
@@ -85,6 +88,8 @@ The script follows [GitHub's GPG signing steps](https://docs.github.com/en/authe
 - `cli/rust.zsh` — rustup, Cargo, and the stable toolchain. Uses the Homebrew formula, or `~/.cargo/bin/rustup` when Homebrew rustup is absent.
 - `cli/antidote.zsh` — Antidote, loaded from `zsh_plugins.txt`
 
+`all.zsh` also sources `dev/hindsight.zsh`, which defines `hindsight-up`.
+
 ## Plugins
 
 Edit `zsh_plugins.txt`. Put one plugin on each line. Save the file, then open a new shell. Antidote clones a new plugin at that start. The shell runs `compinit` before the list so Oh My Zsh plugins can register completions.
@@ -107,6 +112,12 @@ ohmyzsh/ohmyzsh path:plugins/git
 ## Hammerspoon
 
 Caffeine on `ctrl-alt-shift-c`, ShiftIt with its default binds, and a Bluetooth toggle that turns the radio off on sleep and on at wake. `blueutil` is taken from `/opt/homebrew` or `/usr/local`, whichever is present. Vendored spoons: Caffeine, ShiftIt, SpoonInstall.
+
+## Hindsight
+
+`dev/docker-compose.yaml` starts Hindsight. Compose passes `OPENAI_API_KEY` through as `HINDSIGHT_API_LLM_API_KEY`.
+
+`hindsight-up` reads `~/.config/devtools/hindsight-openai` when you run it. Bootstrap writes that file once. The choices are a 1Password secret reference (`op read` at command time), the `OPENAI_API_KEY` already in your environment, or skip. The reference stays in that file. Delete the file and run `./bootstrap.sh` again to change the choice. A 1Password reference needs the 1Password CLI with app integration turned on.
 
 ## Layout
 

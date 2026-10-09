@@ -100,6 +100,74 @@ bootstrap_configure_config_links() {
     "Herdr"
 }
 
+bootstrap_hindsight_config_path() {
+  printf '%s/devtools/hindsight-openai\n' "${XDG_CONFIG_HOME:-$HOME/.config}"
+}
+
+bootstrap_write_hindsight_resolver() {
+  local value="$1"
+  local config dir
+
+  config="$(bootstrap_hindsight_config_path)"
+  dir="$(dirname "$config")"
+  mkdir -p "$dir"
+  printf '%s\n' "$value" > "$config"
+  chmod 600 "$config"
+  bootstrap_log "Wrote Hindsight key resolver to $config"
+}
+
+bootstrap_configure_hindsight() {
+  local config choice ref
+
+  config="$(bootstrap_hindsight_config_path)"
+
+  if [[ -f "$config" ]]; then
+    bootstrap_log "Hindsight key resolver already set at $config"
+    return 0
+  fi
+
+  if (( BOOTSTRAP_DRY_RUN )); then
+    printf '[dry-run] ask how to resolve OPENAI_API_KEY for hindsight-up and write %s\n' "$config"
+    return 0
+  fi
+
+  if [[ ! -t 0 ]]; then
+    bootstrap_warn "No terminal. Skipping Hindsight key resolver. Re-run ./bootstrap.sh to set it."
+    return 0
+  fi
+
+  printf '%s\n' \
+    "How should hindsight-up resolve OPENAI_API_KEY?" \
+    "  1) 1Password secret reference (op read, when you run hindsight-up)" \
+    "  2) OPENAI_API_KEY already in the environment" \
+    "  3) Skip"
+  printf 'Choice [1/2/3]: '
+  read -r choice || true
+
+  case "$choice" in
+    1)
+      printf '1Password secret reference (op://...): '
+      read -r ref || true
+      ref="${ref#"${ref%%[![:space:]]*}"}"
+      ref="${ref%"${ref##*[![:space:]]}"}"
+      if [[ "$ref" != op://* ]]; then
+        bootstrap_warn "Expected an op:// reference. Hindsight key resolver was not written."
+        return 0
+      fi
+      bootstrap_write_hindsight_resolver "$ref"
+      ;;
+    2)
+      bootstrap_write_hindsight_resolver "env"
+      ;;
+    3 | "")
+      bootstrap_write_hindsight_resolver "skip"
+      ;;
+    *)
+      bootstrap_warn "Unknown choice. Hindsight key resolver was not written."
+      ;;
+  esac
+}
+
 bootstrap_run_apply() {
   bootstrap_log "Applying bootstrap"
 
@@ -108,6 +176,7 @@ bootstrap_run_apply() {
   bootstrap_install_brew_bundle
   bootstrap_configure_zsh_source
   bootstrap_configure_config_links
+  bootstrap_configure_hindsight
 
   bootstrap_log "Git name, email, and commit signing are manual: ./scripts/gpg-signing.sh"
 }
