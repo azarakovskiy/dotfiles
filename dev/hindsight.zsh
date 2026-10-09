@@ -8,7 +8,7 @@ hindsight-up() {
   compose="${${(%):-%x}:A:h}/docker-compose.yaml"
 
   if [[ ! -f $config ]]; then
-    echo "Hindsight key resolver is missing. Run ./bootstrap.sh" >&2
+    echo "Hindsight key resolver is missing. Run ./install.sh" >&2
     return 1
   fi
 
@@ -22,7 +22,7 @@ hindsight-up() {
       key="${OPENAI_API_KEY:-}"
       ;;
     skip)
-      echo "Hindsight key resolver was skipped. Delete $config and run ./bootstrap.sh to set it." >&2
+      echo "Hindsight key resolver was skipped. Delete $config and run ./install.sh to set it." >&2
       return 1
       ;;
     *)

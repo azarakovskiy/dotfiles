@@ -301,7 +301,7 @@ if command -v gpg >/dev/null 2>&1 && command -v pinentry-mac >/dev/null 2>&1; th
   say "GnuPG and pinentry-mac are already installed."
 else
   if [[ -z "$brew_bin" ]]; then
-    warn "Homebrew is missing. Run ./bootstrap.sh, then run this script again."
+    warn "Homebrew is missing. Run ./install.sh, then run this script again."
     exit 1
   fi
   say "GnuPG signs commits. pinentry-mac asks for the passphrase."

@@ -17,11 +17,15 @@ bootstrap_run_precheck() {
   bootstrap_log "Running pre-checks"
 
   if [[ "$(uname -s)" != "Darwin" ]]; then
-    bootstrap_die "This bootstrap currently supports macOS only."
+    bootstrap_die "This install supports macOS only."
   fi
 
-  if [[ ! -r "$BOOTSTRAP_REPO_ROOT/all.zsh" ]]; then
-    bootstrap_die "Cannot find all.zsh under repo root: $BOOTSTRAP_REPO_ROOT"
+  if [[ ! -r "$BOOTSTRAP_REPO_ROOT/cli/all.zsh" ]]; then
+    bootstrap_die "Cannot find cli/all.zsh under repo root: $BOOTSTRAP_REPO_ROOT"
+  fi
+
+  if [[ ! -r "$BOOTSTRAP_REPO_ROOT/dev/hindsight.zsh" ]]; then
+    bootstrap_die "Cannot find dev/hindsight.zsh under repo root: $BOOTSTRAP_REPO_ROOT"
   fi
 
   if ! xcode-select -p >/dev/null 2>&1; then
@@ -33,6 +37,6 @@ bootstrap_run_precheck() {
   if bootstrap_find_brew_bin >/dev/null 2>&1; then
     bootstrap_log "Homebrew detected"
   else
-    bootstrap_warn "Homebrew is not installed yet; it will be installed during apply phase."
+    bootstrap_warn "Homebrew is not installed yet; the Shell stop installs it."
   fi
 }

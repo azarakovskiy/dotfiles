@@ -104,7 +104,9 @@ bootstrap_run_verify() {
     printf 'WARN  Homebrew not found\n'
   fi
 
-  printf -v source_line 'source "%s/all.zsh"' "$BOOTSTRAP_REPO_ROOT"
+  printf -v source_line 'source "%s/cli/all.zsh"' "$BOOTSTRAP_REPO_ROOT"
+  bootstrap_verify_line_present "$source_line" "$HOME/.zshrc"
+  printf -v source_line 'source "%s/dev/hindsight.zsh"' "$BOOTSTRAP_REPO_ROOT"
   bootstrap_verify_line_present "$source_line" "$HOME/.zshrc"
 
   if [[ -z "$(git config --global --get user.signingkey || true)" ]]; then
