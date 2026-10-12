@@ -47,7 +47,7 @@ bootstrap_verify_formula() {
     gnupg) bootstrap_verify_command gpg ;;
     nvm) bootstrap_verify_script nvm opt/nvm/nvm.sh ;;
     antidote) bootstrap_verify_script antidote opt/antidote/share/antidote/antidote.zsh ;;
-    *) bootstrap_verify_command "$formula" ;;
+    *) bootstrap_verify_command "${formula##*/}" ;;
   esac
 }
 

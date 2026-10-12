@@ -535,7 +535,8 @@ package_installed() {
   else
     list="$BREW_FORMULAE"
   fi
-  printf '%s\n' "$list" | grep -Fxq "$name"
+  # brew list prints tap formulae by short name: oven-sh/bun/bun is listed as bun.
+  printf '%s\n' "$list" | grep -Fxq "${name##*/}"
 }
 
 outdated_line() {
@@ -718,7 +719,7 @@ build_survey() {
       'brew "'*)
         name="${line#brew \"}"
         name="${name%%\"*}"
-        label="$name"
+        label="${name##*/}"
         if [[ "$name" == "nvm" ]]; then
           label="Node (nvm + Node 24)"
         elif [[ "$name" == "rustup" ]]; then
