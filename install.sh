@@ -594,6 +594,23 @@ rustup_bin() {
   return 1
 }
 
+herdr_bin() {
+  local prefix
+  for prefix in /opt/homebrew /usr/local; do
+    if [[ -x "$prefix/bin/herdr" ]]; then
+      printf '%s' "$prefix/bin/herdr"
+      return 0
+    fi
+  done
+  return 1
+}
+
+reviewr_present() {
+  local bin
+  bin=$(herdr_bin) || return 1
+  "$bin" plugin list 2>/dev/null | grep -q '^- persiyanov\.reviewr '
+}
+
 add_package() {
   local kind="$1" name="$2" label="$3" status detail line
   detail=""
@@ -615,6 +632,10 @@ add_package() {
   if [[ "$name" == "rustup" && "$status" != "missing" ]] && ! rust_stable_present; then
     status="missing"
     detail="stable toolchain is not installed"
+  fi
+  if [[ "$name" == "herdr" && "$status" != "missing" ]] && ! reviewr_present; then
+    status="missing"
+    detail="reviewr plugin is not installed"
   fi
   if [[ "$name" == "nvm" && "$status" == "missing" && -z "$detail" ]]; then
     detail="nvm and Node 24"
@@ -724,6 +745,8 @@ build_survey() {
           label="Node (nvm + Node 24)"
         elif [[ "$name" == "rustup" ]]; then
           label="Rust (rustup + stable)"
+        elif [[ "$name" == "herdr" ]]; then
+          label="herdr + reviewr plugin"
         fi
         add_package formula "$name" "$label"
         ;;
@@ -1036,6 +1059,10 @@ run_packages() {
     elif ! rust_stable_present; then
       install_rust_stable 0
     fi
+  fi
+  if item_on herdr && ! reviewr_present; then
+    bootstrap_log "Installing herdr plugin persiyanov/herdr-reviewr"
+    bootstrap_run_cmd "$(herdr_bin)" plugin install persiyanov/herdr-reviewr
   fi
 }
 

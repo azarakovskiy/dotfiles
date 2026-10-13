@@ -16,7 +16,7 @@ Each selected stop explains the change, then asks you to continue, skip, redo, o
 
 1. Preflight. Checks macOS and the network. When Xcode Command Line Tools are missing, you install them and the stop waits.
 2. Shell. Installs Homebrew when it is missing, appends the `shellenv` line to `~/.zprofile` once, and appends source lines for `cli/all.zsh` and `dev/hindsight.zsh` to `~/.zshrc` once. The next shell sets mouse scaling to 9 and font smoothing to 0.
-3. Packages. One row per `Brewfile` line. The Node row is nvm plus Node 24. The Rust row is rustup plus the stable toolchain. Docker Desktop is one of these rows. `antidote`, `nvm`, and `rustup` can be turned off. A selected outdated row is upgraded. Redo upgrades every selected row.
+3. Packages. One row per `Brewfile` line. The Node row is nvm plus Node 24. The Rust row is rustup plus the stable toolchain. The herdr row is herdr plus the [reviewr](https://github.com/persiyanov/herdr-reviewr) plugin. Docker Desktop is one of these rows. `antidote`, `nvm`, and `rustup` can be turned off. A selected outdated row is upgraded. Redo upgrades every selected row.
 4. Symlinks. Ghostty, Hammerspoon, and Herdr. A symlink is created only when the path is missing. A path that is not this repo's symlink stays unless you choose replace. Hammerspoon keeps `blueutil` selected.
 5. Hindsight. Writes `~/.config/devtools/hindsight-openai` once. The choices are a 1Password reference, the `OPENAI_API_KEY` already in the environment, or skip.
 6. Commit signing. Runs `scripts/gpg-signing.sh`. That stop keeps `gnupg` and `pinentry-mac` selected.
@@ -61,7 +61,7 @@ The script follows [GitHub's GPG signing steps](https://docs.github.com/en/authe
 
 `cli/all.zsh` sources:
 
-- `cli/cli.zsh` — Option-arrow jumps by alphanumeric word, `chrome_no_cors`, and a `$PWD/.zsh_config` hook
+- `cli/cli.zsh` — Option-arrow jumps by alphanumeric word, `chrome_no_cors`, `reviewr` (opens the herdr reviewr plugin), and a `$PWD/.zsh_config` hook
 - `cli/docker.zsh` — `dockstop`
 - `cli/gpg.zsh` — `GPG_TTY` for commit signing
 - `cli/macos.zsh` — mouse scaling and font smoothing, rewritten when the values differ

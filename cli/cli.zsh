@@ -9,6 +9,7 @@ if [[ -o interactive ]]; then
 fi
 
 alias chrome_no_cors='open -na "Google Chrome" --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security'
+alias reviewr='herdr plugin action invoke open --plugin persiyanov.reviewr'
 
 # Load a project-local .zsh_config on directory change, once per directory.
 if ! typeset -f devtools_load_local_zsh_config >/dev/null 2>&1; then
